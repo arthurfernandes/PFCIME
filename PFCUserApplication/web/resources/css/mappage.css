@@ -1,0 +1,133 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 29/07/2015, 12:49:03
+    Author     : arthurfernandes
+*/
+
+.clickable{
+    cursor : pointer;
+}
+
+/*POPUP for WMS GetFeatureInfo*/
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 0px;
+    padding-top: 9px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    /*padding-top: 18px;
+    padding: 15px;*/
+}
+
+.ol-popup-content{
+    min-width: 40vh;
+    min-height: 10px;
+    max-height: 30vh;
+    max-width: 100vh;
+    overflow : scroll;
+    padding: 3px;
+    border-style: hidden;
+    margin-bottom: 0px;
+}
+
+.ol-popup:after, .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+}
+
+.ol-popup:before {
+    border-top-color: white;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:before {
+    border-top-color: white;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+/*
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+*/
+
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+.ol-popup-closer:after {
+    content: "✖";
+}
+
+table {
+    color: #808080;
+    border-collapse: collapse;
+    border-radius: 15px;
+    border-style: hidden;
+    box-shadow: 0 0 0 2px #336666;
+    padding: 10px;
+    font-family: "Trebuchet MS", sans-serif;
+    font-size: 14px;
+    line-height: 1.4em;
+    font-style: normal;
+    margin-top: 8px;
+    /*font-weight: bold;
+    border-collapse:separate;*/
+}
+
+th {
+    color: white;
+    border-radius: 10px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px #336666;
+    background-color: #336666;
+    vertical-align: middle;
+    width: 20%; 
+    word-wrap: break-word;
+}
+
+tr {
+    border-radius: 10px;
+    border-style: hidden;
+    /*box-shadow: 0 0 0 1px #336666;*/
+    
+}
+
+td {
+    border-radius: 10px;
+    border-style: hidden;
+   
+}
+
+

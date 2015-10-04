@@ -1,0 +1,21 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+
+<!--JQuery-->
+<script src='${pageContext.request.contextPath}/resources/js/code.jquery.com_jquery-2.1.4.min.js'></script>
+<!--Bootstrap-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+<script src="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+<!--Font Awesome-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome-4.4.0/css/font-awesome.min.css">
+<!--link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"-->
+<!--Open Layers-->
+<script src='${pageContext.request.contextPath}/resources/js/ol3js.org_en_master_build_ol.js'></script>
+<link rel='stylesheet' href='${pageContext.request.contextPath}/resources/css/ol3js.org_en_master_css_ol.css'>   
+
+<!--Main Page Styles-->
+<link rel="stylesheet" href='${pageContext.request.contextPath}/resources/css/mappage.css'>
+
+<!--Side Bar that exhibits Layers-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/side_bar.css">
+<script src="${pageContext.request.contextPath}/resources/js/side_bar.js"></script>

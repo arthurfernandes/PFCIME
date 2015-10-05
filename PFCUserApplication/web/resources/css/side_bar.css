@@ -118,3 +118,7 @@ and open the template in the editor.
     height: 20px;
     width: 20px;
 }
+
+#layers{
+    max-height : 70vh;
+}

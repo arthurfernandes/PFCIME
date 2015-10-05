@@ -114,10 +114,19 @@ mapControl.configureLayerBar = function(){
     if(obj !== undefined){
         obj.empty();
         for(i = 0,ii = this.layers.length;i<ii;i++){
+            
+            
             var item = $("<a></a>").addClass("list-group-item small clickable").
-                append($("<i></i>").addClass("glyphicon-plus")).
                 append($("<span></span>").addClass("text-danger").html(this.layers[i].name));
             item.attr("onclick","mapControl.showLayer(this,"+i+")");
+            
+            var legend = $("<img/>").addClass("layer-legend-image");
+            legend.attr("src","legend-graphic?layer="+this.layers[i].wmsId);
+            legend[0].bitem = item;
+            legend.on('load',function(e){
+                this.bitem.prepend(this);
+            });
+            
             obj.append(item);
         }
     }
@@ -127,14 +136,14 @@ mapControl.showLayer = function (element,i) {
     if(this.olLayers[i].getVisible()) {
         this.olLayers[i].setVisible(false);
         //otherLayers[i].setMap(null);
-        $(element).children('i').removeClass('glyphicon-minus');
-        $(element).children('i').addClass('glyphicon-plus');
+        //$(element).children('i').removeClass('glyphicon-minus');
+        //$(element).children('i').addClass('glyphicon-plus');
         $(element).children('span').removeClass('text-success');
         $(element).children('span').addClass('text-danger');
     } else{
         this.olLayers[i].setVisible(true);
-        $(element).children('i').removeClass('glyphicon-plus');
-        $(element).children('i').addClass('glyphicon-minus');
+        //$(element).children('i').removeClass('glyphicon-plus');
+        //$(element).children('i').addClass('glyphicon-minus');
         $(element).children('span').removeClass('text-danger');
         $(element).children('span').addClass('text-success');
     } 

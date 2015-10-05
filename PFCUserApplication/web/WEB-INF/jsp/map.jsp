@@ -79,7 +79,7 @@
                                     <a href="#" class="list-group-item" data-toggle="collapse" data-target="#ol" data-parent="#menu">
                                         <i class="fa fa-list-alt"> Outras Camadas</i>
                                     </a>
-                                    <div id="ol" class="sublinks collapse map-control-layers">
+                                    <div id="ol" class="sublinks collapse map-control-layers table-responsive">
                                     </div>
                                 </div>
                             </div>

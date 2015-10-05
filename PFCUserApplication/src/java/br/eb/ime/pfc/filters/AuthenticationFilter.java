@@ -62,7 +62,7 @@ import org.hibernate.context.internal.ManagedSessionContext;
  * If no data is found regarding the basic http authorization or the user:password,
  * is not a match a 403 Http Error Code is sent to the user.
  */
-@WebFilter(filterName = "AuthenticationFilter", servletNames = {"MapServlet","WMSProxyServlet","ListLayersServlet"})
+@WebFilter(filterName = "AuthenticationFilter", servletNames = {"MapServlet","WMSProxyServlet","LegendGraphicServlet","ListLayersServlet"})
 public class AuthenticationFilter implements Filter{
     private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 

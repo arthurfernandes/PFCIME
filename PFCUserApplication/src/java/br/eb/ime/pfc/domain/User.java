@@ -1,7 +1,11 @@
 package br.eb.ime.pfc.domain;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,28 +25,22 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User implements Serializable{
-    
     private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_NAME = "";
+    private static final String DEFAULT_EMAIL = "";
+    private static final String DEFAULT_TELEPHONE = "";
     
     @Id
     @Column(name = "USER_ID") private final String username;
-    
-    @Column(name = "PASSWORD") private final String password;
-    
-    private String name;
-    private String email;
-    private String telephone;
+    @Column(name = "PASSWORD") private String password;
+
+    @Column(name= "NAME") private String name;
+    @Column(name= "EMAIL") private String email;
+    @Column(name ="TELEPHONE") private String telephone;
     
     @ManyToOne(optional=false,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "ACCESSLEVEL_ID",referencedColumnName="ACCESSLEVEL_ID")
     private AccessLevel accessLevel;
-    
-    /*
-    * Representation Invariant:
-    * username must not be empty.
-    * password must not be empty.
-    * accessLevel must not be null;
-    */
     
     public static User makeUser(String username,String password,AccessLevel accessLevel){
         if(isValid(username)){
@@ -65,6 +63,20 @@ public class User implements Serializable{
         }
     }
     
+    private static String encryptPassword(String password){
+        String encryptedPassword = password;
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(password.getBytes());
+            encryptedPassword = new String(messageDigest.digest());
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Couldn't encrypt user password because the"
+                    + "specified algorithm doesn't exist.", ex);
+        }
+        return encryptedPassword;
+    }
+    
     /**
      * Constructs a user with the specified username, password and Access Level
      * @param username
@@ -76,21 +88,26 @@ public class User implements Serializable{
      */
     protected User(String username,String password,AccessLevel accessLevel){
         this.username = username;
-        this.password = password;
+        this.password = encryptPassword(password);
         this.accessLevel = accessLevel;
-        this.name = "";
-        this.telephone = "";
-        this.email = "";
+        this.name = DEFAULT_NAME;
+        this.telephone = DEFAULT_TELEPHONE;
+        this.email = DEFAULT_EMAIL;
         checkRep();
     }
     
+    /**
+     * Default Constructor for serialization/deserialization processes only.
+     * This constructor is used by classes that inherit from this class to extend
+     * some plugin functionality such as Hibernate Proxy's.
+     */
     protected User(){
         this.username = null;
         this.password = null;
         this.accessLevel = null;
-        this.name = "";
-        this.telephone = "";
-        this.email = "";
+        this.name = DEFAULT_NAME;
+        this.telephone = DEFAULT_TELEPHONE;
+        this.email = DEFAULT_EMAIL;
     }
     
     /**
@@ -111,11 +128,21 @@ public class User implements Serializable{
     }
     
     /**
-     * Returns the password of this user.
-     * @return password
+     * Sets the password for this user.
+     * @param password
      */
-    public String getPassword(){
-        return this.password;
+    public void setPassword(String password){
+        this.password = encryptPassword(password);
+        checkRep();
+    }
+   
+    /**
+     * 
+     * @param password
+     * @return 
+     */
+    public boolean authenticatePassword(String password){
+       return this.password.equals(encryptPassword(password));
     }
     
     /**
@@ -125,6 +152,7 @@ public class User implements Serializable{
     public AccessLevel getAccessLevel(){
         return this.accessLevel;
     }
+    
     
     public void setAccessLevel(AccessLevel accessLevel){
         this.accessLevel = accessLevel;

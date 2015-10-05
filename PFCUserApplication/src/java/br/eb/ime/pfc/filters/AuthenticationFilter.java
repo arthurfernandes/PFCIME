@@ -23,6 +23,7 @@
  */
 package br.eb.ime.pfc.filters;
 
+import br.eb.ime.pfc.domain.HTTP_STATUS;
 import br.eb.ime.pfc.domain.Layer;
 import br.eb.ime.pfc.domain.ObjectNotFoundException;
 import br.eb.ime.pfc.domain.User;
@@ -33,6 +34,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -46,7 +49,6 @@ import javax.servlet.http.HttpSession;
 import javax.xml.bind.DatatypeConverter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.context.internal.ManagedSessionContext;
 
 /**
@@ -54,11 +56,15 @@ import org.hibernate.context.internal.ManagedSessionContext;
  * This class is a Filter responsible to intercept requests and verify whether 
  * the user is logged in this session or not.
  * 
- * If the user is logged in this Filter does nothing, otherwise it will send the user
- * a 403 Http Error Code.
+ * If the user is logged in this Filter it will chain to other filters or servlets,
+ * otherwise it will try to find out if the user sends http basic authorization headers
+ * to log in the user.
+ * If no data is found regarding the basic http authorization or the user:password,
+ * is not a match a 403 Http Error Code is sent to the user.
  */
 @WebFilter(filterName = "AuthenticationFilter", servletNames = {"MapServlet","WMSProxyServlet","ListLayersServlet"})
 public class AuthenticationFilter implements Filter{
+    private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 
     private FilterConfig filterConfig = null;
     
@@ -71,18 +77,23 @@ public class AuthenticationFilter implements Filter{
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
-        final HttpSession session = httpRequest.getSession(true);
-        final String username = (String) session.getAttribute("user");
-        request.getServletContext().log("USERNAME: "+request.getParameter("username"));
-        request.getServletContext().log("PASSWORD: "+request.getParameter("password"));
+        //Creates session for user if it wasn't created before with (true)
+        final HttpSession httpSession = httpRequest.getSession(true);
+        final String username = (String) httpSession.getAttribute("user");
         if(username == null){
-            if(this.basicAuthentication(httpRequest,httpResponse)){
-                request.getServletContext().log("BASIC AUTHENTICATION");
-                chain.doFilter(request, response);
+            HttpServletResponse resp = (HttpServletResponse) response;
+            try{
+                final boolean basicAuthorized = this.basicAuthentication(httpRequest,httpResponse);
+                if(basicAuthorized){
+                    LOGGER.log(Level.CONFIG, "BASIC HTTP AUTHORIZATION for: {0}", username);
+                    chain.doFilter(request, response);
+                }
+                else{
+                    resp.sendError(HTTP_STATUS.UNAUTHORIZED.getCode());
+                }
             }
-            else{
-                HttpServletResponse resp = (HttpServletResponse) response;
-                resp.sendError(401);
+            catch(HibernateException e){
+                resp.sendError(HTTP_STATUS.INTERNAL_ERROR.getCode());
             }
         }
         else{
@@ -90,44 +101,40 @@ public class AuthenticationFilter implements Filter{
         }
     }
     
-    protected boolean authenticateUser(HttpServletRequest request,HttpServletResponse response,String username,String password){
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        final Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        ManagedSessionContext.bind(session);
-        final UserManager userManager = new UserManager(session);
-        if(username.equals("")){//cannot be empty
+    public static boolean authenticateUser(HttpServletRequest request, String username,String password) throws HibernateException{
+        if(!User.isValid(username)){
             return false;
         }
-        String passwordDB = null;
-        Set<String> layersIds = new HashSet<>();
+        //Try to retrieve user from database
+        Session session = null;
         try{
-            final User user = userManager.getById(username);
-            for(Layer layer : user.getAccessLevel().getLayers()){
-                layersIds.add(layer.getWmsId());
-            }
-            passwordDB = user.getPassword();
-            session.getTransaction().commit();
+            session = HibernateUtil.getCurrentSession();
         }
-        catch(HibernateException | ObjectNotFoundException e){
-            session.getTransaction().rollback();
-        }
-        finally{
-            session.close();
+        catch(Throwable ex){
+            throw new HibernateException("Could not create session for user.");
         }
         
-        if(passwordDB != null && passwordDB.equals(password)){
-            //CACHE LAYERS
-            request.getSession().setAttribute("user", username);
-            request.getSession().setAttribute("layers", layersIds);
-            return true;
+        final UserManager userManager = new UserManager(session);
+        try{
+            User user = userManager.getById(username);
+        
+            if(user.authenticatePassword(password)){
+                Set<String> layersIds = new HashSet<>();
+                for(Layer layer : user.getAccessLevel().getLayers()){
+                    layersIds.add(layer.getWmsId());
+                }
+                request.getSession().setAttribute("user", username);
+                request.getSession().setAttribute("layers", layersIds);
+                return true;
+            }
         }
-        else{
+        catch(ObjectNotFoundException e){
             return false;
         }
+        return false;
     }
     
-    protected boolean basicAuthentication(HttpServletRequest request,HttpServletResponse response){
+    protected boolean basicAuthentication(HttpServletRequest request,HttpServletResponse response) throws HibernateException{
         final Enumeration<String> headers = request.getHeaderNames();
         if(headers != null){
             String authorizationHeader = null;
@@ -138,7 +145,7 @@ public class AuthenticationFilter implements Filter{
                     break;
                 }
             }
-            if(authorizationHeader == null || authorizationHeader.toUpperCase().contains("Basic")){
+            if(authorizationHeader == null || !authorizationHeader.toUpperCase().contains("BASIC")){
                 return false;
             }
             else{
@@ -158,13 +165,36 @@ public class AuthenticationFilter implements Filter{
                 else{
                     final String username = usernamePasswordArray[0];
                     final String password = usernamePasswordArray[1];
-                    return this.authenticateUser(request,response,username, password);
+                    request.getServletContext().log("USERNAME"+username);
+                    request.getServletContext().log("PASSWORD"+password);
+                    Session session = createSessionForBasicAuthentication();
+                    try{
+                        boolean isAuthorized = AuthenticationFilter.authenticateUser(request,username, password);
+                        return isAuthorized;
+                    }
+                    finally{
+                        session.close();
+                    }
                 }
             }
         }
         else{
             return false;
         }
+    }
+    
+    protected Session createSessionForBasicAuthentication(){
+        Session session = null;
+        try{
+            session = HibernateUtil.openSession();   
+            session.beginTransaction();
+            ManagedSessionContext.bind(session);
+        }
+        catch(Throwable e){
+            LOGGER.log(Level.SEVERE,"Could not retrieve session Factory for basic http authorization",e);
+            throw new HibernateException("Could not create session for basic http authorization");
+        }
+        return session;
     }
     
     @Override

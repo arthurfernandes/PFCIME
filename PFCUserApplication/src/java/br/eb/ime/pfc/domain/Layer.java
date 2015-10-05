@@ -37,11 +37,11 @@ public class Layer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final double DEFAULT_OPACITY = 1.0;
-    public static final Style DEFAULT_STYLE = new Style("");
+    public static final String DEFAULT_STYLE = "";
 
     @Column(name = "NAME") private final String name;
     @Id @Column(name = "LAYER_ID") private final String wmsId;
-    @Embedded private Style style;
+    private String style;
     @Column(name = "OPACITY") private double opacity;
 
     @ElementCollection(fetch = FetchType.LAZY) 
@@ -57,13 +57,19 @@ public class Layer implements Serializable {
                 @JoinColumn(name = "LAYER_ID", referencedColumnName = "LAYER_ID", nullable = false)})
     private final Set<AccessLevel> accessLevels;
 
-    /*
-     * Representation Invariant:
-     * - The wmsId must not be an empty string.
-     * - 0.0 <= opacity <= 1.0
-     * - features,name and style must not be null.
-     */
     //CONSTRUCTORS
+    
+    /**
+     * Creates a WMS Layer with the specified name and wmsId.
+     * @param name
+     * The name that serves as a title to the layer.
+     * @param wmsId
+     * The layer identifier in the wms server
+     * @return
+     * A WMS Layer with the specified name and wmsId
+     * @throws ObjectInvalidIdException 
+     * If the wmsId specified is not valid.
+     */
     public static Layer makeLayer(String name, String wmsId) throws ObjectInvalidIdException {
         if (isValidId(wmsId)) {
             return new Layer(name, wmsId);
@@ -72,6 +78,14 @@ public class Layer implements Serializable {
         }
     }
 
+    /**
+     * Indicates whether the specified wmsId is valid for a Layer.
+     * A valid wmsId cannot contain spaces, and newline characters.
+     * @param wmsId
+     * Some layer wmsId
+     * @return 
+     * True if the wmsId is valid.
+     */
     public static boolean isValidId(String wmsId) {
         if (wmsId.equals("")) {
             return false;
@@ -99,6 +113,11 @@ public class Layer implements Serializable {
         this.accessLevels = new HashSet<>();
     }
 
+    /**
+     * Default Constructor for serialization/deserialization processes only.
+     * This constructor is used by classes that inherit from this class to extend
+     * some plugin functionality such as Hibernate Proxy's.
+     */
     protected Layer() {
         this.name = null;
         this.wmsId = null;
@@ -112,11 +131,11 @@ public class Layer implements Serializable {
      * Checks the representation invariant.
      */
     private void checkRep() {
-        assert !wmsId.equals("");
+        assert isValidId(this.wmsId);
         assert (0.0 <= opacity) && (opacity <= 1.0);
         assert style != null;
         assert features != null;
-
+        assert accessLevels != null;
     }
 
     //OBSERVERS
@@ -141,10 +160,9 @@ public class Layer implements Serializable {
 
     /**
      * Returns the style of this Layer.
-     *
      * @return style
      */
-    public Style getStyle() {
+    public String getStyle() {
         return this.style;
     }
 
@@ -167,30 +185,33 @@ public class Layer implements Serializable {
         return Collections.unmodifiableSet(features);
     }
 
+    public Collection<AccessLevel> getAccessLevels() {
+        return Collections.unmodifiableSet(this.accessLevels);
+    }
+    
     //MUTATORS
+    
     /**
      * Add a feature to this Layer.
      *
      * @param feature The feature to be added
-     * @throws br.eb.ime.pfc.domain.Layer.FeatureRepetitionException when the
+     * @throws RepeatedItemException when the
      * user tries to add a feature with the same wmsId of a feature that already
      * exists in this Layer.
      */
-    public void addFeature(Feature feature) throws FeatureRepetitionException {
+    public void addFeature(Feature feature) throws RepeatedItemException {
         for (Feature feat : features) {
             if (feat.getWmsId().equals(feature.getWmsId())) {
-                throw new FeatureRepetitionException("Cannot add feature with repeated wmsId");
+                throw new RepeatedItemException("Cannot add feature with repeated wmsId");
             }
         }
         features.add(feature);
+        checkRep();
     }
 
-    public Collection<AccessLevel> getAccessLevels() {
-        return Collections.unmodifiableSet(this.accessLevels);
-    }
-
-    public void addAccessLevel(AccessLevel accessLevel) {
+    public void addAccessLevel(AccessLevel accessLevel) throws RepeatedItemException {
         this.accessLevels.add(accessLevel);
+        checkRep();
     }
 
     /**
@@ -205,29 +226,12 @@ public class Layer implements Serializable {
             throw new OpacityOutOfRangeException("Opacity must be a value between 0.0 and 1.0");
         }
         this.opacity = opacity;
+        checkRep();
     }
 
-    public void setStyle(Style style) {
+    public void setStyle(String style) {
         this.style = style;
-    }
-
-    /**
-     * This exception is triggered when one tries to add a feature to a Layer,
-     * and the feature has the same wmsId of a feature already present in the
-     * Layer.
-     */
-    public class FeatureRepetitionException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Creates a FeatureRepetitionException with a detail message.
-         *
-         * @param message The message that specify the error.
-         */
-        public FeatureRepetitionException(String message) {
-            super(message);
-        }
+        checkRep();
     }
 
     /**

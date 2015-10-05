@@ -42,6 +42,10 @@ body {
  margin-bottom:0px;
 }
 
+.red-border {
+    border-color : #ff6666;
+}
+
 .iphone{
  //margin-right : 10px;
 }

@@ -31,7 +31,7 @@ import br.eb.ime.pfc.domain.UserManager;
 import br.eb.ime.pfc.hibernate.HibernateUtil;
 import flexjson.JSONSerializer;
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -72,7 +72,7 @@ public class ListLayersServlet extends HttpServlet {
                 request.getServletContext().log("Initializing access level");
                 Hibernate.initialize(accessLevel);
                 request.getServletContext().log("Before getting layers");
-                final List<Layer> layers = accessLevel.getLayers();
+                final Collection<Layer> layers = accessLevel.getLayers();
                 request.getServletContext().log("After getting layers");
                 for(Layer layer : layers){
                     Hibernate.initialize(layer);

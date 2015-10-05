@@ -23,21 +23,15 @@
  */
 package br.eb.ime.pfc.controllers;
 
-import br.eb.ime.pfc.domain.Layer;
-import br.eb.ime.pfc.domain.ObjectNotFoundException;
-import br.eb.ime.pfc.domain.User;
-import br.eb.ime.pfc.domain.UserManager;
-import br.eb.ime.pfc.hibernate.HibernateUtil;
+import br.eb.ime.pfc.domain.HTTP_STATUS;
+import br.eb.ime.pfc.filters.AuthenticationFilter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 
 /**
  *
@@ -82,44 +76,25 @@ public class LoginServlet extends HttpServlet {
         String username = (String) request.getParameter("username");
         String password = (String) request.getParameter("password");
         if(username == null || password == null){
-            throw new RuntimeException("Username and Password parameters are not set for request");
-        }
-        else if(username.equals("") || password.equals("")){
-            request.setAttribute("authentication_failure", true);
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            response.sendError(HTTP_STATUS.BAD_REQUEST.getCode());
+            return;
         }
         else{
-            final Session session = HibernateUtil.getCurrentSession();
-            //Create User Manager to Retrieve user
-            final UserManager userManager = new UserManager(session);
-            
-            //If user isn't found it will be null
             try{
-                final User user = userManager.getById(username);
-                //User Validation
-                if(user!= null && password.equals(user.getPassword())){
-                    request.getSession().setAttribute("user",user.getUsername());
-                    final Set<String> userLayerIds = new HashSet<>();
-                    for(Layer layer : user.getAccessLevel().getLayers()){
-                        userLayerIds.add(layer.getWmsId());
-                    }
-                    request.getSession().setAttribute("layers",userLayerIds);
+                if(AuthenticationFilter.authenticateUser(request, username, password)){
                     response.sendRedirect(request.getContextPath()+"/map");
-                    
+                    return;
                 }
                 else{
-                    //Not valid Username or Password
-                    request.setAttribute("authentication_failure", true);
-                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                    response.sendError(HTTP_STATUS.UNAUTHORIZED.getCode());
+                    return;
                 }
             }
-            catch(HibernateException | ObjectNotFoundException e){
-                request.setAttribute("authentication_failure", true);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
+            catch(HibernateException e){
+                response.sendError(HTTP_STATUS.BAD_REQUEST.getCode());
             }
         }
     }
-    
     
     /**
      * Returns a short description of the servlet.

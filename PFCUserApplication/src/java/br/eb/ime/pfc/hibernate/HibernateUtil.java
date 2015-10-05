@@ -26,28 +26,34 @@ package br.eb.ime.pfc.hibernate;
 import br.eb.ime.pfc.domain.AccessLevel;
 import br.eb.ime.pfc.domain.Feature;
 import br.eb.ime.pfc.domain.Layer;
-import br.eb.ime.pfc.domain.Style;
 import br.eb.ime.pfc.domain.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 /**
  * Hibernate Utility class with a convenient method to get Session Factory
  * object.
  */
 public class HibernateUtil {
-
-    private static final SessionFactory sessionFactory;
+    private static final Logger LOGGER = Logger.getLogger(HibernateUtil.class.getName());
+    private static final String hibernateConfigurationFilePath = "/br/eb/ime/pfc/hibernate/hibernate.cfg.xml";
+    private static SessionFactory sessionFactory = null;
     
     static {
         SessionFactory sf = null;
-        try {
-            // Create the SessionFactory from standard (hibernate.cfg.xml) 
-            final String hibernateConfigurationFilePath = "/br/eb/ime/pfc/hibernate/hibernate.cfg.xml";
-            sf = new AnnotationConfiguration().configure(hibernateConfigurationFilePath).buildSessionFactory();
-        } catch (Throwable ex) {
+        try{
+            final Configuration configuration = new Configuration();
+            configuration.configure(hibernateConfigurationFilePath);
+            StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+            sf = configuration.buildSessionFactory(ssrb.build());
+        }
+        catch(Throwable ex){
+            LOGGER.log(Level.SEVERE,"Could not config Hibernate from hibernate.cfg.xml",ex);
         }
         finally{
             sessionFactory = sf;
@@ -60,6 +66,22 @@ public class HibernateUtil {
         }
         else{
             throw new HibernateException("Could not initialize Hibernate.");
+        }
+    }
+    
+    public static Session openSession() throws HibernateException{
+        if(sessionFactory == null){
+            throw new HibernateException("Hibernate is not initialized, cannot open session.");
+        }
+        else{
+            Session session = null;
+            try{
+                session = sessionFactory.openSession();
+            }
+            catch(Throwable ex){
+                throw new HibernateException("Hibernate could not open session");
+            }
+            return session;
         }
     }
     
@@ -77,7 +99,7 @@ public class HibernateUtil {
         
     }
     
-    public static void main(String args[]){
+    public static void main(String args[]) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         
@@ -97,7 +119,7 @@ public class HibernateUtil {
         Layer atracoesComite =  Layer.makeLayer("Atrações do Comitê","rio2016:atracoes_comite");
         Layer competicoes =  Layer.makeLayer("Competições","rio2016:competicoes");
         Layer hoteis =  Layer.makeLayer("Hotéis","rio2016:hoteis");
-        hoteis.setStyle(new Style("pinpoint"));
+        hoteis.setStyle("pinpoint");
         Layer lanchesRefeicoes =  Layer.makeLayer("Lanches e Refeições","rio2016:lanches_refeicoes");
         Layer corpoBombeiros =  Layer.makeLayer("Corpo de Bombeiros","rio2016:corpo_de_bombeiros");
         Layer delegacias =  Layer.makeLayer("Delegacias Policiais","rio2016:delegacias_policiais");

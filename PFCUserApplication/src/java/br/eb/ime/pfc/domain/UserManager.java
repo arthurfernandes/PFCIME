@@ -1,5 +1,6 @@
 package br.eb.ime.pfc.domain;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.hibernate.Hibernate;
@@ -71,16 +72,17 @@ public class UserManager {
     public List<User> readAll() throws HibernateException{
         final Query query = session.createQuery("from User");
         final List<User> allUsers = query.list();
-        /*
-        allUsers.sort(new Comparator<User>(){
+        
+        Collections.sort(allUsers,new Comparator<User>(){
             @Override
             public int compare(User o1, User o2) {
                 return o1.getUsername().compareTo(o2.getUsername());
             }
         });
+        
         for(User user : allUsers){
             Hibernate.initialize(user);
-        }*/
+        }
         return allUsers;
     }
 }

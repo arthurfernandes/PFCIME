@@ -5,7 +5,7 @@
  */
 package br.eb.ime.pfc.controllers;
 
-import br.eb.ime.pfc.domain.GeoServerCommunication;
+import br.eb.ime.pfc.geoserver.GeoServerCommunication;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;

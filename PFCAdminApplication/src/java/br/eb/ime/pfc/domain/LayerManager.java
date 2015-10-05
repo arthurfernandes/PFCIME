@@ -1,5 +1,6 @@
 package br.eb.ime.pfc.domain;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.hibernate.Hibernate;
@@ -59,14 +60,14 @@ public class LayerManager {
     public List<Layer> readAll(){
         final Query query = session.createQuery("from Layer");
         final List<Layer> allLayers = query.list();
-        /*
-        allLayers.sort(new Comparator<Layer>(){
+        
+        Collections.sort(allLayers,new Comparator<Layer>(){
             @Override
             public int compare(Layer o1, Layer o2) {
                 return o1.getWmsId().compareTo(o2.getWmsId());
             }
         });
-        */
+        
         for(Layer layer : allLayers){
             Hibernate.initialize(layer);
         }

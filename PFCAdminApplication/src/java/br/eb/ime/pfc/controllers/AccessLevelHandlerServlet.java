@@ -24,12 +24,12 @@
 package br.eb.ime.pfc.controllers;
 
 import br.eb.ime.pfc.domain.AccessLevel;
-import br.eb.ime.pfc.domain.AccessLevel.LayerRepetitionException;
 import br.eb.ime.pfc.domain.AccessLevelManager;
 import br.eb.ime.pfc.domain.Layer;
 import br.eb.ime.pfc.domain.LayerManager;
 import br.eb.ime.pfc.domain.ObjectDuplicateException;
 import br.eb.ime.pfc.domain.ObjectNotFoundException;
+import br.eb.ime.pfc.domain.RepeatedItemException;
 import br.eb.ime.pfc.hibernate.HibernateUtil;
 import flexjson.JSONSerializer;
 import java.io.IOException;
@@ -218,7 +218,7 @@ public class AccessLevelHandlerServlet extends HttpServlet {
             catch(HibernateException e){
                 throw new RuntimeException("No layer with the specified id");
             }
-            catch(LayerRepetitionException e){
+            catch(RepeatedItemException e){
                 throw new RuntimeException("Repeated layer to add");
             }
             layerIndex += 1;

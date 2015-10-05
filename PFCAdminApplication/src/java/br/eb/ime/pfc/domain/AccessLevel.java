@@ -1,11 +1,11 @@
 package br.eb.ime.pfc.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,28 +32,30 @@ public class AccessLevel implements Serializable{
     
     private static final long serialVersionUID = 1L;
     
-    @Id
-    @Column(name = "ACCESSLEVEL_ID")
+    @Id @Column(name = "ACCESSLEVEL_ID")
     private final String name;
     
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "ACCESSLEVEL_LAYER",
                 joinColumns = {@JoinColumn(name="ACCESSLEVEL_ID",referencedColumnName="ACCESSLEVEL_ID")},
                 inverseJoinColumns = {@JoinColumn(name="LAYER_ID",referencedColumnName="LAYER_ID",nullable = false)})
-    //@OrderColumn(name = "layer_index",updatable = true,insertable = true,nullable = false)
-    private final List<Layer> layers;
+    private final Set<Layer> layers;
     
     @OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL,mappedBy="accessLevel")
-    private final List<User> users;
-    /*
-    * Representation Invariant:
-    * name must not be empty
-    * layers must contain all values of mapLayers
-    * layers must have the same size of mapLayers
-    */
+    private final Set<User> users;
     
     //Constructors
     
+    /**
+     * Creates an AccessLevel with the specified name
+     * @param name
+     * Name that identifies this Access Level
+     * @return
+     * AccessLevel created
+     * @throws ObjectInvalidIdException 
+     * If the name is not a valid name for an Access Level.
+     * Access Level names must not be empty and contain trailing spaces
+     */
     public static AccessLevel makeAccessLevel(String name) throws ObjectInvalidIdException{
         if(isValidId(name)){
             return new AccessLevel(name);
@@ -63,6 +65,15 @@ public class AccessLevel implements Serializable{
         }
     }
     
+    /**
+     * Checks if the specified name is a valid name for an Access Level.
+     * Valid names are composed only by digits and spaces, but can not be empty 
+     * or contain trailing spaces.
+     * @param name
+     * The name of an access level
+     * @return 
+     * true if the name is a valid name
+     */
     public static boolean isValidId(String name){
         if(name.equals("")){
             return false;
@@ -78,29 +89,32 @@ public class AccessLevel implements Serializable{
     /**
      * Creates an Access Level with the specified name.
      * @param name 
-     * Requires: name must not be empty
      */
     protected AccessLevel(String name){
         this.name = name;
-        this.layers = new LinkedList<>();
-        this.users = new ArrayList<>();
+        this.layers = new LinkedHashSet<>();
+        this.users = new LinkedHashSet<>();
         checkRep();
     }
     
     /**
-     * Default Constructor for serialization/deserialization process only.
+     * Default Constructor for serialization/deserialization processes only.
+     * This constructor is used by classes that inherit from this class to extend
+     * some plugin functionality such as Hibernate Proxy's.
      */
     protected AccessLevel(){
         name = null;
-        this.users = new ArrayList<>();
-        this.layers = new LinkedList<>();
+        this.users = new LinkedHashSet<>();
+        this.layers = new LinkedHashSet<>();
     }
     
     /**
      * Checks the representation invariant.
      */
     private void checkRep(){
-        assert !this.name.equals("");
+        assert isValidId(this.name) == true;
+        assert this.users != null;
+        assert this.layers != null;
     }
     
     /**
@@ -117,23 +131,25 @@ public class AccessLevel implements Serializable{
      * Effects: layers is an unmodifiable list that specifies each layer in 
      * the order they were added to this Access Level.
      */
-    public List<Layer> getLayers(){
-        return Collections.unmodifiableList(layers);
+    public Set<Layer> getLayers(){
+        return Collections.unmodifiableSet(layers);
     }
     
-    public void addUser(User user){
-        if(this.containsUser(user.getUsername())){
-            throw new UserRepetitionException("Access Level already contains user with the specified username");
-        }
-        else{
-            this.users.add(user);
-        }
-    }
-    
+    /**
+     * Returns a collection of users that belong to this access level.
+     * @return 
+     */
     public Collection<User> getUsers(){
-        return Collections.unmodifiableList(users);
+        return Collections.unmodifiableSet(users);
     }
     
+    /**
+     * Indicates whether this access level contains an user with the specified username.
+     * @param username
+     * Username of user
+     * @return 
+     * True if this access level contains an user with username param.
+     */
     public boolean containsUser(String username){
         for(User user : this.users){
             if(user.getUsername().equalsIgnoreCase(username)){
@@ -159,58 +175,37 @@ public class AccessLevel implements Serializable{
         return false;
     }
     
-    //Mutators
+    /*Mutators*/
+    
+    /**
+     * Adds an user to this access level
+     * @param user 
+     * User that will be added to this access level.
+     * @throws RepeatedItemException
+     * If user has the same username of an user added to this access level.
+     */
+    public void addUser(User user) throws RepeatedItemException{
+        assert user != null;
+        if(this.containsUser(user.getUsername())){
+            throw new RepeatedItemException("Access Level already contains user with the specified username");
+        }
+        else{
+            this.users.add(user);
+        }
+    }
     
     /**
      * Add another Layer to this Access Level. 
      * @param layer to be accessed by this Access Level
-     * @throws br.eb.ime.pfc.domain.AccessLevel.LayerRepetitionException
+     * @throws RepeatedItemException
      * When the layer added has the same wmsId of another layer already added.
      */
-    public void addLayer(Layer layer) throws LayerRepetitionException{
+    public void addLayer(Layer layer) throws RepeatedItemException{
         if(hasAccessToLayer(layer.getWmsId())){
-            throw new LayerRepetitionException("Cannot add Layer with the same wmsId of a Layer in use.");
+            throw new RepeatedItemException("Cannot add Layer with the same wmsId of a Layer in use.");
         }
         this.layers.add(layer);
         
         checkRep();
-    }
-    
-    /**
-     * This exception is triggered when one tries to add a layer to an Access Level, 
-     * and the layer has the same wmsId of a layer already present in the 
-     * AccessLevel.
-     */
-    public static class LayerRepetitionException extends RuntimeException{
-        
-        private static final long serialVersionUID = 1L;
-        
-        /**
-         * Creates a LayerRepetitionException with a detail message.
-         * @param message 
-         * The message that specify the error.
-         */
-        public LayerRepetitionException(String message){
-            super(message);
-        }
-    }
-    
-    /**
-     * This exception is triggered when one tries to add a layer to an Access Level, 
-     * and the layer has the same wmsId of a layer already present in the 
-     * AccessLevel.
-     */
-    public static class UserRepetitionException extends RuntimeException{
-        
-        private static final long serialVersionUID = 1L;
-        
-        /**
-         * Creates a LayerRepetitionException with a detail message.
-         * @param message 
-         * The message that specify the error.
-         */
-        public UserRepetitionException(String message){
-            super(message);
-        }
     }
 }

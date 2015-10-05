@@ -3,32 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package br.eb.ime.pfc.controllers;
 
-import br.eb.ime.pfc.domain.AccessLevel;
-import br.eb.ime.pfc.domain.ObjectNotFoundException;
-import br.eb.ime.pfc.domain.User;
-import br.eb.ime.pfc.domain.UserManager;
-import br.eb.ime.pfc.hibernate.HibernateUtil;
+import br.eb.ime.pfc.geoserver.GeoServerCommunication;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.hibernate.HibernateException;
 
 /**
  *
- * This class is a Controller responsible to show to the user the main page of this
- * application that renders the map and its layers.
- * The user must be signed in the system, otherwise he will be redirected to the 
- * index page.
+ * @author arthurfernandes
  */
-@WebServlet(name = "MapServlet", urlPatterns = {"/map"})
-public class MapServlet extends HttpServlet {
-
+@WebServlet(name = "LegendGraphicServlet", urlPatterns = {"/legend-graphic"})
+public class LegendGraphicServlet extends HttpServlet {
+    private static final int DEFAULT_SIZE = 32;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,20 +32,10 @@ public class MapServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final String username = (String) request.getSession().getAttribute("user");
-        try{
-            final UserManager userManager = new UserManager(HibernateUtil.getCurrentSession());
-            final User user = userManager.getById(username);
-            request.setAttribute("username", user.getUsername());
-            request.setAttribute("accessLevelName", user.getAccessLevel().getName());
-            request.getRequestDispatcher("/WEB-INF/jsp/map.jsp").forward(request, response);
+        String layer = request.getParameter("layer");
+        if(layer != null){
+            GeoServerCommunication.getLegendGraphic(layer, DEFAULT_SIZE, DEFAULT_SIZE, request, response);
         }
-        catch(HibernateException e){
-            response.sendError(500);
-        }
-        catch(ObjectNotFoundException e){
-            response.sendError(403);
-        } 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="adminApp">
+    <head>
+        <title>Administrador</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href = "http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href = "resources/css/admin-app-styles.css">
+        <script src="resources/js/code.jquery.com_jquery-2.1.4.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+        <style>
+            body{ 
+                background-image: url('resources/img/background3.jpg');
+                background-repeat: repeat;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container container-fluid">
+            <div id="layers-panel" ng-controller="LayerController" class="panel panel-default table-responsive">
+                <div class="panel-heading clickable jqslidable">
+                    <span class="glyphicon glyphicon-list"></span>Camadas
+                </div>
+                <div class="panel-body row">
+                    <div class="col-md-5">
+                        <!--Layers List-->
+                        <div class="panel panel-default extensible-panel table-responsive">
+                            <!--Layer List Header-->
+                            <div class="panel-heading">
+                                <span class="clickable jqslidable"><span class="glyphicon glyphicon-cog" style="margin-right:5px;"></span>Configuração</span>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-cog" style="margin-right: 0px;"></span>
+                                    </button>
+                                    <ul class="dropdown-menu slidedown sortable">
+                                        <li><a class="clickable handler-add-select"><span class="glyphicon glyphicon-plus-sign"></span>Adicionar</a></li>
+                                        <li><a class="trash clickable handler-delete-multiple"><span class="glyphicon glyphicon-trash "></span>Deletar</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--Layer List Body-->
+                            <div class="panel-body">
+                                <div class="checkbox "><label><input type="checkbox" class="select-all-checkbox">Selecionar Tudo</label></div>
+                                
+                                <ul class="list-group object-list-div">
+                                    <li ng-repeat="layer in layers" class="list-group-item">
+                                        <input type="checkbox" class="handler-checkbox"/>
+                                        <label for="checkbox" class="clickable" ng-click="select($index)">{{layer.wmsId}}</label>
+                                        <div class="pull-right action-buttons">
+                                            <a href="#" class="handler-load-current" ng-click="select(layer.wmsId)"><span class="glyphicon glyphicon-pencil"></span></a>
+                                            <a href="#" class="trash handler-delete-selected" ng-click="delete(layer.wmsId)"><span class="glyphicon glyphicon-trash"></span></a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="text-center handler-add-select clickable" style="margin-top:10px;"><span class="glyphicon glyphicon-plus-sign add-glyph"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <!--Selected Layer / Add Layer-->
+                        <div class="panel panel-default extensible-panel table-responsive">
+                            <div class="panel-heading input-group">
+                                <input type="text" ng-value="selected.wmsId" class="pull-left form-control" ng-disabled="currentsave" placeholder="wmsId"/>
+                                
+                                <span ng-click="add(selected)" class="input-group-addon clickable handler-add-current" ng-hide="currentsave">Adicionar</span>
+                                <span ng-click="save(selected)" class="input-group-addon clickablehandler-save-current" ng-hide="!currentsave">Salvar</span>
+                                
+                            </div>
+                            <div class="panel-body">
+                                <div class="input-group">
+                                    <label for="handler-object-name" class="input-group-addon">Nome:</label>
+                                    <input type="text" ng-value="selected.name" class="form-control handler-object-name handler-field" placeholder="Nome"/>
+                                </div>
+                                <div class="input-group">
+                                    <label for="handler-object-name" class="input-group-addon">Estilo:</label>
+                                    <input type="text" ng-value="selected.style" class="form-control handler-object-style-name handler-field" placeholder="Estilo">
+                                </div>
+                                <div class="input-group">
+                                    <label for="handler-object-name" class="input-group-addon">Opacidade:</label>
+                                    <input type="text" ng-value="selected.opacity" class="form-control handler-object-opacity handler-field" placeholder="Opacidade">
+                                </div>
+                                <div class="panel panel-danger">
+                                    <div class="panel-heading clickable jqslidable">
+                                        Feições
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="list-group">
+                                            <ul class="list-group">
+                                                <li class="list-group-item" ng-repeat="feature in selected.features">
+                                                    <label>{{$index}}</label>
+                                                    <a ng-click="deleteSelectedFeature($index) "class="trash clickable pull-right"><span class="glyphicon glyphicon-trash"></span></a>
+                                                    <div class="input-group" style="margin-bottom:10px">
+                                                        <span class="input-group-addon">wmsId:</span>
+                                                        <input type="text" ng-value="feature.wmsId" class="form-control handler-object-features-wmsId handler-field" placeholder="wmsId"/>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Nome:</span>
+                                                        <input type="text" ng-value="feature.name" class="form-control handler-object-features-name handler-field" placeholder="Nome"/>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="text-center clickable"><span class="glyphicon glyphicon-plus-sign add-glyph"></span></div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Main Application-->
+        <script src="resources/js/adminapp/adminapp.js"></script>
+        <!--Controllers-->
+        <script src="resources/js/adminapp/controllers/layercontroller.js"></script>
+        <!--Services-->
+        <script src="resources/js/adminapp/services/layerhandler.js"></script>
+        <!--Directives-->
+        <script src="resources/js/adminapp/directives/jqslidable.js"></script>
+    </body>
+</html>

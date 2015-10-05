@@ -23,9 +23,8 @@
  */
 package br.eb.ime.pfc.controllers;
 
-import br.eb.ime.pfc.domain.GeoServerCommunication;
+import br.eb.ime.pfc.geoserver.GeoServerCommunication;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

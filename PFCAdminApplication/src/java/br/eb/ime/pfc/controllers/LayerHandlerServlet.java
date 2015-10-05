@@ -217,9 +217,9 @@ public class LayerHandlerServlet extends HttpServlet {
         
         final Layer layer = Layer.makeLayer(name, wmsId);
         
-        String style = request.getParameter("style[name]");
+        String style = request.getParameter("style");
         if(style != null){
-            layer.setStyle(new Style(style));
+            layer.setStyle(style);
         }
         String opacityString = request.getParameter("opacity");
         if(opacityString != null)

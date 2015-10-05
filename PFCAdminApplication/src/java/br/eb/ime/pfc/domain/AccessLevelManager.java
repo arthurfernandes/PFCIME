@@ -23,6 +23,7 @@
  */
 package br.eb.ime.pfc.domain;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.hibernate.Hibernate;
@@ -44,7 +45,7 @@ public class AccessLevelManager {
     
     public void create(AccessLevel accessLevel) throws HibernateException{
         if(this.session.get(AccessLevel.class,accessLevel.getName())!=null){
-            throw new ObjectDuplicateException("There's a layer with the specified wmsID");
+            throw new ObjectDuplicateException("There's an access level with the specified name");
         }
         this.session.merge(accessLevel);
     }
@@ -73,14 +74,14 @@ public class AccessLevelManager {
     public List<AccessLevel> readAll() throws HibernateException{
         final Query query = session.createQuery("from AccessLevel");
         final List<AccessLevel> allAccessLevels = query.list();
-        /*
-        allAccessLevels.sort(new Comparator<AccessLevel>(){
+        
+        Collections.sort(allAccessLevels, new Comparator<AccessLevel>(){
             @Override
             public int compare(AccessLevel o1, AccessLevel o2) {
                 return o1.getName().compareTo(o2.getName());
             }
         });
-        */
+        
         for(AccessLevel accessLevel : allAccessLevels){
             Hibernate.initialize(accessLevel);
         }

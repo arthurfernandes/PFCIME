@@ -25,18 +25,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 public class User implements Serializable{
-    private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_NAME = "";
-    private static final String DEFAULT_EMAIL = "";
-    private static final String DEFAULT_TELEPHONE = "";
+    public static final long serialVersionUID = 1L;
+    public static final String DEFAULT_NAME = "";
+    public static final String DEFAULT_EMAIL = "";
+    public static final String DEFAULT_TELEPHONE = "";
     
     @Id
     @Column(name = "USER_ID") private final String username;
     @Column(name = "PASSWORD") private String password;
 
-    @Column(name= "NAME") private String name;
-    @Column(name= "EMAIL") private String email;
-    @Column(name ="TELEPHONE") private String telephone;
+    //@Column(name= "NAME") private String name;
+    //@Column(name= "EMAIL") private String email;
+    //@Column(name ="TELEPHONE") private String telephone;
+    private String name;
+    private String email;
+    private String telephone;
     
     @ManyToOne(optional=false,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "ACCESSLEVEL_ID",referencedColumnName="ACCESSLEVEL_ID")
@@ -63,7 +66,7 @@ public class User implements Serializable{
         }
     }
     
-    private static String encryptPassword(String password){
+    protected static String encryptPassword(String password){
         String encryptedPassword = password;
         MessageDigest messageDigest;
         try {
@@ -74,7 +77,7 @@ public class User implements Serializable{
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Couldn't encrypt user password because the"
                     + "specified algorithm doesn't exist.", ex);
         }
-        return encryptedPassword;
+        return password;
     }
     
     /**
@@ -172,6 +175,10 @@ public class User implements Serializable{
     
     public void setEmail(String email){
         this.email = email;
+    }
+    
+    public String getPassword(){
+        return this.password;
     }
     
     public String getTelephone(){

@@ -73,12 +73,12 @@ public class UserManager {
         final Query query = session.createQuery("from User");
         final List<User> allUsers = query.list();
         
-        Collections.sort(allUsers,new Comparator<User>(){
+        /*Collections.sort(allUsers,new Comparator<User>(){
             @Override
             public int compare(User o1, User o2) {
                 return o1.getUsername().compareTo(o2.getUsername());
             }
-        });
+        });*/
         
         for(User user : allUsers){
             Hibernate.initialize(user);

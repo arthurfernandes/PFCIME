@@ -30,6 +30,7 @@
                 .script("${pageContext.request.contextPath}/resources/js/wmscrud-template.js").wait()
                 .script("${pageContext.request.contextPath}/resources/js/wmscrud-implementation.js").wait()
                 .script("${pageContext.request.contextPath}/resources/js/wmscrud-uihandler.js")
+                .script("${pageContext.request.contextPath}/resources/js/form-tooltips.js")
                 .script("${pageContext.request.contextPath}/resources/js/jquery-ui-1.11.4.custom/jquery-ui.min.js")
                 .script("resources/js/jQuery-File-Upload/js/vendor/jquery.ui.widget.js")
                 .script("resources/js/jQuery-File-Upload/js/jquery.iframe-transport.js")
@@ -457,14 +458,17 @@
                     </div>
             </div>  
             
-            <!-- STYLE -->
+            <!-- Estilos -->
             
             <div id="style-panel" class="panel panel-default">
                 <div class="panel-heading clickable slidable">
                     <span class="glyphicon glyphicon-list"></span>Estilos
                 </div>
                 <div class="row panel-body">
-                    
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <button type="button" class="btn btn-danger col-xs-12">Carregar biblioteca</button>
+                    </div>
+                </div>
                 </div>
             </div>  
             <!-- IMPORT-EXPORT -->

@@ -19,10 +19,10 @@
     <body>
         <div class="container container-fluid">
             <div id="layers-panel" ng-controller="LayerController" class="panel panel-default table-responsive">
-                <div class="panel-heading clickable jqslidable">
+                <div class="panel-heading clickable jqslidable" ng-click="readLayersIfVisible()">
                     <span class="glyphicon glyphicon-list"></span>Camadas
                 </div>
-                <div class="panel-body row">
+                <div class="row panel-body">
                     <div class="col-md-5">
                         <!--Layers List-->
                         <div class="panel panel-default extensible-panel table-responsive">
@@ -90,7 +90,7 @@
                                                 <li class="list-group-item" ng-repeat="feature in selected.features">
                                                     <label>{{$index}}</label>
                                                     <a ng-click="deleteSelectedFeature($index) "class="trash clickable pull-right"><span class="glyphicon glyphicon-trash"></span></a>
-                                                    <div class="input-group" style="margin-bottom:10px">
+                                                    <div class="input-group" style="margin-bottom:6px">
                                                         <span class="input-group-addon">wmsId:</span>
                                                         <input type="text" ng-value="feature.wmsId" class="form-control handler-object-features-wmsId handler-field" placeholder="wmsId"/>
                                                     </div>
@@ -117,6 +117,7 @@
         <script src="resources/js/adminapp/controllers/layercontroller.js"></script>
         <!--Services-->
         <script src="resources/js/adminapp/services/layerhandler.js"></script>
+        <script src="resources/js/adminapp/services/messageservice.js"></script>
         <!--Directives-->
         <script src="resources/js/adminapp/directives/jqslidable.js"></script>
     </body>

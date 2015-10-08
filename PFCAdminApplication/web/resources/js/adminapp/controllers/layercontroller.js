@@ -2,7 +2,7 @@ adminApp.controller('LayerController',['$scope','LayerHandler','$log', function(
     $scope.layers = [{wmsId : 'bairros',features : [{wmsId : "abcd"},{name: "abdef"}]},{wmsId : 'hoteis'},{wmsId : 'atracoes'}];
     $scope.selected = {};
     $scope.currentsave = false;
-    
+    $scope.readLayersState = false;
     //UI Related
     
     $scope.select = function(index){
@@ -23,14 +23,39 @@ adminApp.controller('LayerController',['$scope','LayerHandler','$log', function(
         $scope.selected.features.push({wmsId : "",name : ""});
     };
     
-    //CRUD
+    $scope.readLayersIfVisible = function(){
+        if($scope.readLayerState){
+            $scope.readAll();
+        }
+        
+        $scope.readLayerState = !$scope.readLayerState;
+    };
     
-    $scope.readAll = function(){
+    //FORM VALIDATION
+    
+    $scope.validateSelected = function(){
+        if($scope.selectedElement.wmsId === ""){
+            
+        }
         
     };
     
+    //CRUD
+    
+    $scope.readAll = function(){
+        console.log("readall");
+        var promise = layerHandler.readAll();
+        promise.then(function successCallBack(response){
+            console.log("success");
+            if(typeof response.data === 'object'){
+                $scope.layers = response.data.objects;
+            }
+        });
+    };
+    
     $scope.add = function(){
-        
+        validateSelected();
+        layerHandler.add($scope.selectedElement);
     };
     
     $scope.save = function(){

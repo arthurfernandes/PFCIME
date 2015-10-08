@@ -70,9 +70,10 @@ public class UserHandlerServlet extends HttpServlet {
     private void readAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final UserManager userManager = new UserManager(HibernateUtil.getCurrentSession());
         final List<User> users = userManager.readAll();
+        request.getServletContext().log("USERSIZE:"+users.size());
         JSONSerializer serializer = new JSONSerializer();
         final StringBuilder jsonLayersBuilder = new StringBuilder();
-
+        
         serializer.rootName("objects").transform(new AbstractTransformer(){
             @Override
             public void transform(Object object) {

@@ -24,6 +24,7 @@
 
 package br.eb.ime.pfc.listeners;
 
+import br.eb.ime.pfc.geoserver.GeoServerCommunication;
 import br.eb.ime.pfc.hibernate.HibernateUtil;
 import javax.servlet.ServletContextEvent;
 import org.hibernate.HibernateException;
@@ -39,7 +40,13 @@ public class ServletContextListener implements javax.servlet.ServletContextListe
         
         try{
             HibernateUtil.getSessionFactory();
-            HibernateUtil.main(null);
+            //HibernateUtil.main(null);
+            try{
+                GeoServerCommunication.main(null);
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         }
         catch(HibernateException e){
             

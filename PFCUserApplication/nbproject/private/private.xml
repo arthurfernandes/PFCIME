@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/controllers/LayerHandlerServlet.java</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/domain/Feature.java</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/hibernate/HibernateUtil.java</file>
             <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/hibernate/hibernate.cfg.xml</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/controllers/LoginServlet.java</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/controllers/ListLayersServlet.java</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/domain/User.java</file>
-            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/src/java/br/eb/ime/pfc/filters/HibernateSessionRequestFilter.java</file>
+            <file>file:/Users/arthurfernandes/Documents/Storage/Dropbox%20(Personal)/PFC/Projeto/PFCUserApplication/web/WEB-INF/web.xml</file>
         </group>
     </open-files>
 </project-private>

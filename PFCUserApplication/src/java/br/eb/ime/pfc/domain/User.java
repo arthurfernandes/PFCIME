@@ -74,7 +74,7 @@ public class User implements Serializable{
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, "Couldn't encrypt user password because the"
                     + "specified algorithm doesn't exist.", ex);
         }
-        return encryptedPassword;
+        return password;
     }
     
     /**

@@ -21,13 +21,20 @@
         <url-pattern />
     </filter-mapping>
     
-    <!--security-constraint>
+    <security-constraint>
         <web-resource-collection>
             <web-resource-name>secured page</web-resource-name>
-            <url-pattern>/*</url-pattern>
+                <url-pattern>/wms</url-pattern>
+                <url-pattern>/</url-pattern>
+                <url-pattern>/wms/*</url-pattern>
+                <url-pattern>/map</url-pattern>
+                <url-pattern>/layers</url-pattern>
+                <url-pattern>/login</url-pattern>
+                <url-pattern>/logout</url-pattern>
+                <url-pattern>/legend-graphic</url-pattern>
         </web-resource-collection>
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-    </security-constraint-->
+    </security-constraint>
 </web-app>

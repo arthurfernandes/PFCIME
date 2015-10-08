@@ -84,6 +84,7 @@ public class AuthenticationFilter implements Filter{
             HttpServletResponse resp = (HttpServletResponse) response;
             try{
                 final boolean basicAuthorized = this.basicAuthentication(httpRequest,httpResponse);
+                LOGGER.log(Level.INFO,"AUTHORIZATIONSTATUS:"+basicAuthorized);
                 if(basicAuthorized){
                     LOGGER.log(Level.CONFIG, "BASIC HTTP AUTHORIZATION for: {0}", username);
                     chain.doFilter(request, response);
@@ -163,13 +164,13 @@ public class AuthenticationFilter implements Filter{
                     return false;
                 }
                 else{
+                    
                     final String username = usernamePasswordArray[0];
                     final String password = usernamePasswordArray[1];
-                    request.getServletContext().log("USERNAME"+username);
-                    request.getServletContext().log("PASSWORD"+password);
                     Session session = createSessionForBasicAuthentication();
                     try{
                         boolean isAuthorized = AuthenticationFilter.authenticateUser(request,username, password);
+                        request.getServletContext().log("AUTHORIZED"+isAuthorized);
                         return isAuthorized;
                     }
                     finally{

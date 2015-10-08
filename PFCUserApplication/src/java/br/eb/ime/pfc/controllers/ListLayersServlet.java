@@ -31,7 +31,11 @@ import br.eb.ime.pfc.domain.UserManager;
 import br.eb.ime.pfc.hibernate.HibernateUtil;
 import flexjson.JSONSerializer;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -63,28 +67,31 @@ public class ListLayersServlet extends HttpServlet {
         final String username = (String) request.getSession().getAttribute("user");
         if(username != null){
             try{
-                request.getServletContext().log("Before UserManager,"+username);
                 final UserManager userManager = new UserManager(HibernateUtil.getCurrentSession());
-                request.getServletContext().log("Before getById");
                 final User user = userManager.getById(username);
-                request.getServletContext().log("Before getting AccessLevel");
                 final AccessLevel accessLevel = user.getAccessLevel();
-                request.getServletContext().log("Initializing access level");
                 Hibernate.initialize(accessLevel);
-                request.getServletContext().log("Before getting layers");
+
                 final Collection<Layer> layers = accessLevel.getLayers();
-                request.getServletContext().log("After getting layers");
+                final List<Layer> orderedLayers = new ArrayList<>();
                 for(Layer layer : layers){
                     Hibernate.initialize(layer);
+                    orderedLayers.add(layer);
                     request.getServletContext().log(layer.getName());
                 }
-                request.getServletContext().log("Before serializing it");
+                
+                Collections.sort(orderedLayers,new Comparator<Layer>(){
+                    @Override
+                    public int compare(Layer o1, Layer o2) {
+                        return o1.getWmsId().compareTo(o2.getWmsId());
+                    }
+                });
+                
                 JSONSerializer serializer = new JSONSerializer();
-                request.getServletContext().log("Serializing");
                 response.setContentType("application/json");
                 serializer.rootName("layers").
                     include("features").
-                    exclude("*.class").serialize(layers,response.getWriter());
+                    exclude("*.class").serialize(orderedLayers,response.getWriter());
             }
             catch(HibernateException e){
                 e.printStackTrace();

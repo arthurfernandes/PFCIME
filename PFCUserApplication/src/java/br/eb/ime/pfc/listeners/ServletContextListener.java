@@ -39,6 +39,12 @@ public class ServletContextListener implements javax.servlet.ServletContextListe
         
         try{
             HibernateUtil.getSessionFactory();
+            try{
+                //GeoServerCommunication.main(null);
+            }
+            catch(Exception e){
+                
+            }
         }
         catch(HibernateException e){
             

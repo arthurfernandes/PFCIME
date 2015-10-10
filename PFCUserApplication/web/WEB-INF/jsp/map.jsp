@@ -10,6 +10,8 @@
 <html>
     <head>
         <title>PFC IME</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/logo/icon.png"><!-- Major Browsers -->
+<!--[if IE]><link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/resources/logo/icon.ico"/><![endif]--><!-- Internet Explorer-->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%@include file="/WEB-INF/jspf/default_includes.jspf" %>

@@ -14,7 +14,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/logo/icon.png"><!-- Major Browsers -->
+<!--[if IE]><link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/resources/logo/icon.ico"/><![endif]--><!-- Internet Explorer-->
         <script src="${pageContext.request.contextPath}/resources/js/code.jquery.com_jquery-2.1.4.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css">

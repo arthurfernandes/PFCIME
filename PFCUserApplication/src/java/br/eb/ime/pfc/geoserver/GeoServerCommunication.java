@@ -50,8 +50,8 @@ import org.apache.commons.io.IOUtils;
  * @author arthurfernandes
  */
 public class GeoServerCommunication {
-    private final static String GEOSERVER_URL = "http://ec2-54-94-206-253.sa-east-1.compute.amazonaws.com/geoserver";
-    //private final static String GEOSERVER_URL = "http://localhost:9090";
+    //private final static String GEOSERVER_URL = "http://ec2-54-94-206-253.sa-east-1.compute.amazonaws.com/geoserver";
+    private final static String GEOSERVER_URL = "http://localhost:9090";
     private final static String GEOSERVER_RESTUSER = "admin";
     private final static String GEOSERVER_RESTPW = "geoserver";
     private final static String BASE64_AUTHORIZATION = new String(Base64.encodeBase64((GEOSERVER_RESTUSER + ":" + GEOSERVER_RESTPW).getBytes()));

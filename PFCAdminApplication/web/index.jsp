@@ -11,6 +11,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Configuração</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/resources/logo/icon.png"><!-- Major Browsers -->
+<!--[if IE]><link rel="SHORTCUT ICON" href="${pageContext.request.contextPath}/resources/logo/icon.ico"/><![endif]--><!-- Internet Explorer-->
         <!--JQuery-->
         <script src='${pageContext.request.contextPath}/resources/js/code.jquery.com_jquery-2.1.4.min.js'></script>
         <!--Bootstrap-->
@@ -257,7 +259,7 @@
                                     </div>
                                     <div class="input-group">
                                         <label for="handler-object-name" class="input-group-addon">Estilo:</label>
-                                        <input type="text" class="form-control handler-object-style-name handler-field" placeholder="Estilo">
+                                        <input type="text" class="form-control handler-object-style handler-field" placeholder="Estilo">
                                     </div>
                                     <div class="input-group">
                                         <label for="handler-object-name" class="input-group-addon">Opacidade:</label>
@@ -460,7 +462,7 @@
             
             <!-- Estilos -->
             
-            <div id="style-panel" class="panel panel-default">
+            <div id="style-panel" class="panel panel-default" style="display:none">
                 <div class="panel-heading clickable slidable">
                     <span class="glyphicon glyphicon-list"></span>Estilos
                 </div>
@@ -473,7 +475,7 @@
             </div>  
             <!-- IMPORT-EXPORT -->
             
-            <div class="col-xs-8 col-xs-offset-2 col-md-4 col-md-offset-4 configuration-import-export">
+            <div class="col-xs-8 col-xs-offset-2 col-md-4 col-md-offset-4 configuration-import-export" style="display:none">
                 <div class="btn-group col-xs-12">
                     <button id="import-configuration" class="btn btn-lg btn-success col-xs-6">
                         <span>Importar</span>

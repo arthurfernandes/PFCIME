@@ -2,7 +2,7 @@
     display: none;
     position: absolute;
     background-color: white;
-    padding: 15px 25px 15px 15px;
+    padding: 15px 15px 15px 15px;
     border: 1px solid #cccccc;
     border-radius: 10px;
     bottom: 12px;
@@ -37,7 +37,8 @@
     min-width: 40vh;
     min-height: 30px;
     max-height: 30vh;
-    max-width: 400px;
+    max-width: 50vh;
+    padding: 15px 0px 15x 0px;
     overflow-x: auto;
     border-style: hidden;
 }

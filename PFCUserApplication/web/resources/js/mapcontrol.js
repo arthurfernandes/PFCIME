@@ -203,6 +203,7 @@ mapControl.configurePopup = function(){
     this.map.addOverlay(popup);
     var self = this;
     this.map.on('singleclick', function(evt) {
+        popup.hide();
         self.getFeatureInfo(evt,{"popup" : popup});
     });
 

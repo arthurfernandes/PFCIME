@@ -92,42 +92,41 @@ and open the template in the editor.
 }
 */
 table {
-    color: #808080;
-    border-collapse: collapse;
     border-radius: 15px;
-    border-style: hidden;
-    box-shadow: 0 0 0 2px #336666;
-    padding: 10px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border: 2px solid #336666;
+    border-collapse: collapse;
+    //box-shadow: 0 0 0 -3px #336666;
+    color: #808080;
     font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
     line-height: 1.4em;
     font-style: normal;
-    margin-top: 8px;
-    /*font-weight: bold;
-    border-collapse:separate;*/
+    //font-weight: bold;
+    //border-collapse: separate;
 }
 
 th {
     color: white;
-    border-radius: 10px;
-    border-style: hidden;
-    box-shadow: 0 0 0 1px #336666;
+    //border-radius: 10px;
+    //border: 3px solid #336666;
+    //box-shadow: 0 0 0 1px #336666;
     background-color: #336666;
-    vertical-align: middle;
     width: 20%; 
     word-wrap: break-word;
 }
 
 tr {
-    border-radius: 10px;
-    border-style: hidden;
+    //border-radius: 10px;
+    //border-style: hidden;
     /*box-shadow: 0 0 0 1px #336666;*/
     
 }
 
 td {
-    border-radius: 10px;
-    border-style: hidden;
+    //border-radius: 10px;
+    //border-style: hidden;
    
 }
 

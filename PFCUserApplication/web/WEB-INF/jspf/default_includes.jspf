@@ -19,3 +19,6 @@
 <!--Side Bar that exhibits Layers-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/side_bar.css">
 <script src="${pageContext.request.contextPath}/resources/js/side_bar.js"></script>
+
+<!--Ol3 popup-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/ol3-popup-master/src/ol3-popup.css">

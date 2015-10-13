@@ -155,7 +155,8 @@ mapControl.showBaseLayer = function (baselayer){
     }
 };
 
-mapControl.configurePopup = function(){
+mapControl.configurePopup2 = function(){
+    
     var container = document.getElementById("popup");
     var content = $('#popup-content');
     var closer = $('#popup-closer');
@@ -197,8 +198,19 @@ mapControl.configurePopup = function(){
     });
 };
 
+mapControl.configurePopup = function(){
+    var popup = new ol.Overlay.Popup();
+    this.map.addOverlay(popup);
+    var self = this;
+    this.map.on('singleclick', function(evt) {
+        self.getFeatureInfo(evt,{"popup" : popup});
+    });
+
+};
+
 mapControl.getFeatureInfo = function(evt,obj){
-    var content = obj["content"];
+    var popup = obj["popup"];
+    var content = $("<div></div>");//.addClass(".ol-popup-content");
     var hasFeatures = false;
     var view = this.map.getView();
     var viewResolution = view.getResolution();
@@ -215,7 +227,7 @@ mapControl.getFeatureInfo = function(evt,obj){
                 var name = this.layers[i].name;
                 $.ajax({
                     url : url,
-                    async : false,
+                    async : true,
                     success: function(data){
                         var jsonData;
                         try{
@@ -266,7 +278,9 @@ mapControl.getFeatureInfo = function(evt,obj){
                             }
                         }
                         content.append(layerTable);
+                        
                         hasFeatures = true;
+                        popup.show(evt.coordinate, content.html());
                     }
                 });
             }

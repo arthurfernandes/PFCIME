@@ -44,7 +44,7 @@ public class MapServlet extends HttpServlet {
         try{
             final UserManager userManager = new UserManager(HibernateUtil.getCurrentSession());
             final User user = userManager.getById(username);
-            request.setAttribute("username", user.getUsername());
+            request.setAttribute("username", user.getName());
             request.setAttribute("accessLevelName", user.getAccessLevel().getName());
             request.getRequestDispatcher("/WEB-INF/jsp/map.jsp").forward(request, response);
         }

@@ -50,7 +50,7 @@
             <div id="sidebar" class="row main-row ">
                 <div class="col-sm-4 col-md-3 sidebar sidebar-left pull-left">
                     <div class="panel-group sidebar-body" id="accordion-left">
-                        <div class="panel panel-default scrollable_list">
+                        <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" href="#layers">
@@ -62,7 +62,7 @@
                                     </span>
                                 </h4>
                             </div>
-                            <div id="layers" class="panel-collapse collapse in">
+                            <div id="layers" class="panel-collapse collapse in scrollable_list">
                                 <div class="panel-body list-group">
                                     <a href="#" class="list-group-item" data-toggle="collapse" data-target="#bl" data-parent="#menu">
                                         <i class="fa fa-list-alt"> Camadas Base</i>
@@ -95,15 +95,16 @@
             <div id="progress" class="progress-bar"></div>    
         </div>
        
-        <div id="popup" class="ol-popup" style="display:none">
+        <!--div id="popup" class="ol-popup" style="display:none">
             <a href="#" id="popup-closer" class="ol-popup-closer"></a>
             <div id="popup-content" class="table-responsive ol-popup-content"></div>
-        </div>
+        </div-->
         <div class="marker-container">
             <img id="geolocation_marker" src="./resources/img/geolocation_marker.png" data-toggle='tooltip' class='marker-tooltip' style="height: 15px; width:15px;">
         </div>
         
         <!--%@include file="/WEB-INF/jspf/wms_openlayers.jspf" %-->
+        <script src="${pageContext.request.contextPath}/resources/ol3-popup-master/src/ol3-popup.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/mapcontrol.js"></script>
     </body>
 </html>

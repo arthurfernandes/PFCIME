@@ -13,6 +13,7 @@ and open the template in the editor.
 }
 
 /*POPUP for WMS GetFeatureInfo*/
+/*
 .ol-popup {
     position: absolute;
     background-color: white;
@@ -26,21 +27,21 @@ and open the template in the editor.
     border: 1px solid #cccccc;
     bottom: 12px;
     left: -50px;
-    /*padding-top: 18px;
-    padding: 15px;*/
-}
-
+    padding-top: 18px;
+    padding: 15px;
+}*/
+/*
 .ol-popup-content{
     min-width: 40vh;
-    min-height: 10px;
+    min-height: 30px;
     max-height: 30vh;
-    max-width: 100vh;
+    max-width: 200px;
     overflow : scroll;
     padding: 3px;
-    border-style: hidden;
-    margin-bottom: 0px;
+    //border-style: hidden;
+    //margin-bottom: 0px;
 }
-
+/*
 .ol-popup:after, .ol-popup:before {
     top: 100%;
     border: solid transparent;
@@ -79,7 +80,7 @@ and open the template in the editor.
     margin-left: -10px;
 }
 */
-
+/*
 .ol-popup-closer {
     text-decoration: none;
     position: absolute;
@@ -89,7 +90,7 @@ and open the template in the editor.
 .ol-popup-closer:after {
     content: "✖";
 }
-
+*/
 table {
     color: #808080;
     border-collapse: collapse;

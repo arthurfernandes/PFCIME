@@ -85,7 +85,7 @@ mapControl.addLayers = function(layers){
         var source = new ol.source.TileWMS(({
             url: this.layerWMSURL,
             params: { 
-                STYLES : layer.style.name,
+                STYLES : layer.style,
                 LAYERS: layer.wmsId
             }
         }));

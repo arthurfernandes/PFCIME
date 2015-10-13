@@ -13,13 +13,20 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
-    <!--security-constraint>
-        <web-resource-collection>
-            <web-resource-name>secured page</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint-->
+    <!-- error-code related error pages -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/404error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/403error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/WEB-INF/jsp/401error.jsp</location>
+    </error-page>
+    <error-page>
+        <location>/WEB-INF/jsp/error.jsp</location>
+    </error-page>
 </web-app>

@@ -93,11 +93,12 @@ and open the template in the editor.
 */
 table {
     border-radius: 15px;
-    -webkit-border-radius: 15px;
+    /*-webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border: 2px solid #336666;
+    */
     border-collapse: collapse;
-    //box-shadow: 0 0 0 -3px #336666;
+    box-shadow: 0 0 0 2px #336666;
     color: #808080;
     font-family: "Trebuchet MS", sans-serif;
     font-size: 14px;
@@ -109,8 +110,8 @@ table {
 
 th {
     color: white;
-    //border-radius: 10px;
-    //border: 3px solid #336666;
+    border-radius: 10px;
+    border: 3px solid #336666;
     //box-shadow: 0 0 0 1px #336666;
     background-color: #336666;
     width: 20%; 
@@ -118,15 +119,15 @@ th {
 }
 
 tr {
-    //border-radius: 10px;
-    //border-style: hidden;
+    border-radius: 10px;
+    border-style: hidden;
     /*box-shadow: 0 0 0 1px #336666;*/
     
 }
 
 td {
-    //border-radius: 10px;
-    //border-style: hidden;
+    border-radius: 10px;
+    border-style: hidden;
    
 }
 

@@ -38,7 +38,7 @@
     min-height: 30px;
     max-height: 30vh;
     max-width: 50vh;
-    padding: 15px 0px 15x 0px;
+    padding: 15px 15px 15px 0;
     overflow-x: auto;
     border-style: hidden;
 }

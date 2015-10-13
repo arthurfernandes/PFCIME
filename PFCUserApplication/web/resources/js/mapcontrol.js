@@ -225,7 +225,7 @@ mapControl.getFeatureInfo = function(evt,obj){
               {'INFO_FORMAT': 'application/json', 'FEATURE_COUNT': 1});
             if (url) {
                 var olLayer = this.olLayers[i];
-                var name = this.layers[i].name;
+                //var name = this.olLayers[i].name;
                 $.ajax({
                     url : url,
                     async : true,
@@ -242,10 +242,10 @@ mapControl.getFeatureInfo = function(evt,obj){
                         catch(err){
                             return;
                         }
-
+                        
                         var featuresData = jsonData.features[0];
                         var features = olLayer.layerObj.features;
-                        
+                        var name = olLayer.layerObj.name;
                         //counting size of featuresData
                         var key, count = 0;
                         for(key in featuresData) {

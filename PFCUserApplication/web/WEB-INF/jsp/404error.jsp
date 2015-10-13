@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Encontramos um erro inesperado...</title>
+        <title>A Página não foi encontrada</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css">
         <script rel="stylesheet" src="${pageContext.request.contextPath}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
         <script rel="stylesheet" src="${pageContext.request.contextPath}/resources/js/code.jquery.com_jquery-2.1.4.min.js"></script>
@@ -28,9 +28,9 @@
                         <h1>
                             Oops!</h1>
                         <h2>
-                            Desculpe, um erro inesperado ocorreu</h2>
+                            A Página não foi encontrada</h2>
                         <div class="error-details">
-                            Parece que o nosso servidor está apresentando problemas, tente novamente ou em uma outra hora.
+                            Desculpe mas a página requisitada não foi encontrada...
                         </div>
                         <div class="error-actions">
                             <a href="${pageContext.request.contextPath}" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
